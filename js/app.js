@@ -25,7 +25,6 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= 500) {
         this.x = 0;
     }
-    // TODO: Handles collision with the Player (you need to implement)
     checkCollision(this);
 };
 
@@ -36,12 +35,12 @@ var checkCollision = function(enemy) {
 
     // Check for collision between enemy and player
     if (
-        player.y + 135 >= enemy.y + 90
-        && player.y + 90 <= enemy.y + 135
-        && player.x + 25 <= enemy.x + 90        
-        && player.x + 90 >= enemy.x + 25) {
-            console.log('collided');
-            player.resetPlayer();
+        player.y + 135 >= enemy.y + 90 &&
+        player.y + 90 <= enemy.y + 135 &&
+        player.x + 25 <= enemy.x + 90 &&
+        player.x + 90 >= enemy.x + 25) {
+        console.log('collided');
+        player.resetPlayer();
     }
 
     // Check if player reaches borders of the canvas
@@ -68,9 +67,8 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// IDEA: You can add your own Enemy methods as needed
 
-// IDEA: MAke the Gem class.
+// IDEA: Make the Gem class.
 var Gem = function(x, y) {
     // Setting the Player initial location
     this.x = x;
@@ -84,23 +82,40 @@ var Gem = function(x, y) {
 
 Gem.prototype.update = function() {
     if (
-        player.y + 135 >= gem.y + 90
-        && player.y + 90 <= gem.y + 135
-        && player.x + 25 <= gem.x + 90        
-        && player.x + 90 >= gem.x + 25) {
-            console.log('collected');
-            gem.eraseGem();
+        player.y + 135 >= gem.y + 90 &&
+        player.y + 90 <= gem.y + 135 &&
+        player.x + 25 <= gem.x + 90 &&
+        player.x + 90 >= gem.x + 25) {
+        console.log('collected');
+        gem.eraseGem();
     }
+}
+
+Gem.prototype.replaceGem = function() {
+    this.x = getRandomIntInclusive(200, 300);
+    this.y = getRandomIntInclusive(100, 350);
+    player.score += this.value;
 }
 
 Gem.prototype.eraseGem = function() {
     player.score += this.value;
-    this.x = 0;
-    this.y = 0;
+    // find the gem in the array and erase it.
+    findGem(this);
+}
+
+function findGem(gem) {
+    var remove = 0;
+    allGems.forEach(function(el, index){
+        if (gem.x === el.x && gem.y === el.y) {
+            remove = index;
+        }
+    });
+    allGems.splice(remove, 1);
+    remove = 0;
 }
 
 Gem.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // ************************************************************
@@ -121,55 +136,57 @@ var Player = function(x, y, speed) {
 };
 
 Player.prototype.changeChar = function() {
-    ctx.drawImage(Resources.get(player.sprite), player.x, player.y);    
+    ctx.drawImage(Resources.get(player.sprite), player.x, player.y);
 }
 
 Player.prototype.update = function(dt) {
     // this.sprite = player.sprite;
     this.score += 10;
-    this.level += 1; 
+    this.level += 1;
     this.x = 200;
-    this.y = 380;      
-    var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
-    allEnemies.push(enemy);  
+    this.y = 380;
+    var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
+    allEnemies.push(enemy);
+    var gem = new Gem(getRandomIntInclusive(0, 500), getRandomIntInclusive(50, 350));
+    allGems.push(gem);
 };
 
 Player.prototype.handleInput = function(keyCode) {
-    switch(keyCode) {
+    switch (keyCode) {
         case 'up':
             player.y -= player.speed - 20; // -20?
-        break;
+            break;
         case 'down':
             player.y += player.speed - 20; // -20?
-        break;
+            break;
         case 'left':
             player.x -= player.speed; // -20?
-        break;
+            break;
         case 'right':
             player.x += player.speed; // -20?
-        break;
+            break;
         case 'char-boy':
             player.sprite = 'images/char-boy.png';
             player.changeChar();
-        break;
+            break;
         case 'char-cat-girl':
             player.sprite = 'images/char-cat-girl.png';
             player.changeChar();
-        break;
+            break;
         case 'char-horn-girl':
             player.sprite = 'images/char-horn-girl.png';
             player.changeChar();
-        break;
+            break;
         case 'char-pink-girl':
             player.sprite = 'images/char-pink-girl.png';
             player.changeChar();
-        break;
+            break;
         case 'char-princess-girl':
             player.sprite = 'images/char-princess-girl.png';
             player.changeChar();
-        break;        
+            break;
     }
-    
+
 };
 
 Player.prototype.resetPlayer = function() {
@@ -178,29 +195,30 @@ Player.prototype.resetPlayer = function() {
     player.score = 0;
     player.level = 0;
     allEnemies = [];
-    var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
+    var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
     allEnemies.push(enemy);
 }
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     document.getElementById('score').innerHTML = player.score;
     document.getElementById('level').innerHTML = player.level;
 };
 
 // --------------------------------------------
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
+var player = new Player(200, 380, 100);
+
 var allEnemies = [];
-// Place the player object in a variable called player
-var player = new Player(200,380, 100);
-var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
+var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
 allEnemies.push(enemy);
 
 var allGems = [];
-var gem = new Gem(200, 280);
-allGems.push(gem);
+var totalGems = getRandomIntInclusive(1,3);
+for(var i=0; i < totalGems; i++) {
+    var gem = new Gem(getRandomIntInclusive(0, 400), getRandomIntInclusive(50, 350));
+    allGems.push(gem);
+}
 
 
 // This listens for key presses and sends the keys to your
@@ -224,3 +242,17 @@ document.addEventListener('keyup', function(e) {
 // In addition to the basic functionality, you can add more cool functionality to your game. For example, here are some additional features that you can add:
 // IDEA: Player selection: allow the user to select the image for the player character before starting the game. You can use the different character images provided in the images folder (we’ll get to that below).
 // IDEA: Collectables: you can add gems to the game, allowing the player to collect them to make the game more interesting.
+
+/**
+ * 
+ *  Gets a random integer between min and max.
+ * 
+ * @param integer min 
+ * @param integer max 
+ * @returns integer
+ */
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive 
+}

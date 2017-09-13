@@ -94,6 +94,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        allGems.forEach(function(gem) {
+            gem.update();
+        });
         // player.update(); // we'll update the player on other function.
     }
 
