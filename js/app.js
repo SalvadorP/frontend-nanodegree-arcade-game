@@ -68,7 +68,40 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// IDEA You can add your own Enemy methods as needed
+// IDEA: You can add your own Enemy methods as needed
+
+// IDEA: MAke the Gem class.
+var Gem = function(x, y) {
+    // Setting the Player initial location
+    this.x = x;
+    this.y = y;
+    this.value = 5;
+
+    // Loading the image by setting this.sprite to the appropriate image
+    this.sprite = 'images/Gem-Blue.png';
+    // IDEA: Make each gem have a different value depending on the colour
+};
+
+Gem.prototype.update = function() {
+    if (
+        player.y + 135 >= gem.y + 90
+        && player.y + 90 <= gem.y + 135
+        && player.x + 25 <= gem.x + 90        
+        && player.x + 90 >= gem.x + 25) {
+            console.log('collected');
+            gem.eraseGem();
+    }
+}
+
+Gem.prototype.eraseGem = function() {
+    player.score += this.value;
+    this.x = 0;
+    this.y = 0;
+}
+
+Gem.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
+};
 
 // ************************************************************
 
@@ -87,9 +120,9 @@ var Player = function(x, y, speed) {
     this.sprite = 'images/char-boy.png';
 };
 
-// Player.prototype.changeChar = function() {
-//     ctx.drawImage(Resources.get(player.sprite), player.x, player.y);    
-// }
+Player.prototype.changeChar = function() {
+    ctx.drawImage(Resources.get(player.sprite), player.x, player.y);    
+}
 
 Player.prototype.update = function(dt) {
     // this.sprite = player.sprite;
@@ -115,26 +148,26 @@ Player.prototype.handleInput = function(keyCode) {
         case 'right':
             player.x += player.speed; // -20?
         break;
-        // case 'char-boy':
-        //     player.sprite = 'images/char-boy.png';
-        //     player.changeChar();
-        // break;
-        // case 'char-cat-girl':
-        //     player.sprite = 'images/char-cat-girl.png';
-        //     player.changeChar();
-        // break;
-        // case 'char-horn-girl':
-        //     player.sprite = 'images/char-horn-girl.png';
-        //     player.changeChar();
-        // break;
-        // case 'char-pink-girl':
-        //     player.sprite = 'images/char-pink-girl.png';
-        //     player.changeChar();
-        // break;
-        // case 'char-princess-girl':
-        //     player.sprite = 'images/char-princess-girl.png';
-        //     player.changeChar();
-        // break;        
+        case 'char-boy':
+            player.sprite = 'images/char-boy.png';
+            player.changeChar();
+        break;
+        case 'char-cat-girl':
+            player.sprite = 'images/char-cat-girl.png';
+            player.changeChar();
+        break;
+        case 'char-horn-girl':
+            player.sprite = 'images/char-horn-girl.png';
+            player.changeChar();
+        break;
+        case 'char-pink-girl':
+            player.sprite = 'images/char-pink-girl.png';
+            player.changeChar();
+        break;
+        case 'char-princess-girl':
+            player.sprite = 'images/char-princess-girl.png';
+            player.changeChar();
+        break;        
     }
     
 };
@@ -165,6 +198,10 @@ var player = new Player(200,380, 100);
 var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
 allEnemies.push(enemy);
 
+var allGems = [];
+var gem = new Gem(200, 280);
+allGems.push(gem);
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -174,11 +211,11 @@ document.addEventListener('keyup', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
-        // 49: 'char-boy',
-        // 50: 'char-cat-girl',
-        // 51: 'char-horn-girl',
-        // 52: 'char-pink-girl',
-        // 53: 'char-princess-girl',
+        49: 'char-boy',
+        50: 'char-cat-girl',
+        51: 'char-horn-girl',
+        52: 'char-pink-girl',
+        53: 'char-princess-girl',
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
