@@ -81,17 +81,24 @@ var Player = function(x, y, speed) {
     this.y = y;
     this.speed = speed;
     this.score = 0;
+    this.level = 0;
 
     // Loading the image by setting this.sprite to the appropriate image
     this.sprite = 'images/char-boy.png';
 };
 
+// Player.prototype.changeChar = function() {
+//     ctx.drawImage(Resources.get(player.sprite), player.x, player.y);    
+// }
+
 Player.prototype.update = function(dt) {
-    // TODO: The update method for the Player (can be similar to the one for the Enemy)
-    this.sprite = player.sprite;
-    this.score += 1;
+    // this.sprite = player.sprite;
+    this.score += 10;
+    this.level += 1; 
     this.x = 200;
-    this.y = 380;        
+    this.y = 380;      
+    var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
+    allEnemies.push(enemy);  
 };
 
 Player.prototype.handleInput = function(keyCode) {
@@ -110,23 +117,23 @@ Player.prototype.handleInput = function(keyCode) {
         break;
         // case 'char-boy':
         //     player.sprite = 'images/char-boy.png';
-        //     player.update();
+        //     player.changeChar();
         // break;
         // case 'char-cat-girl':
         //     player.sprite = 'images/char-cat-girl.png';
-        //     player.update();
+        //     player.changeChar();
         // break;
         // case 'char-horn-girl':
         //     player.sprite = 'images/char-horn-girl.png';
-        //     player.update();
+        //     player.changeChar();
         // break;
         // case 'char-pink-girl':
         //     player.sprite = 'images/char-pink-girl.png';
-        //     player.update();
+        //     player.changeChar();
         // break;
         // case 'char-princess-girl':
         //     player.sprite = 'images/char-princess-girl.png';
-        //     player.update();
+        //     player.changeChar();
         // break;        
     }
     
@@ -136,12 +143,16 @@ Player.prototype.resetPlayer = function() {
     player.x = 200;
     player.y = 380;
     player.score = 0;
+    player.level = 0;
+    allEnemies = [];
+    var enemy = new Enemy(0, Math.random() * 180+50, Math.random() * 256);
+    allEnemies.push(enemy);
 }
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
     document.getElementById('score').innerHTML = player.score;
-    console.log('player = (' + this.x + ',' + this.y + ');');
+    document.getElementById('level').innerHTML = player.level;
 };
 
 // --------------------------------------------
@@ -175,5 +186,4 @@ document.addEventListener('keyup', function(e) {
 
 // In addition to the basic functionality, you can add more cool functionality to your game. For example, here are some additional features that you can add:
 // IDEA: Player selection: allow the user to select the image for the player character before starting the game. You can use the different character images provided in the images folder (we’ll get to that below).
-// IDEA: Score: you can implement a score for the game. For example, the score can increase each time the player reaches the water, and it can be reset to 0 when collision occurs (or it can be reduced).
 // IDEA: Collectables: you can add gems to the game, allowing the player to collect them to make the game more interesting.
