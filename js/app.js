@@ -51,7 +51,7 @@ var checkCollision = function(enemy) {
     }
     // Top border, Reached the top!
     if (player.y <= 50) {
-        player.resetPlayer();
+        player.update();
     }
     // Left border
     if (player.x < 0) {
@@ -80,6 +80,7 @@ var Player = function(x, y, speed) {
     this.x = x;
     this.y = y;
     this.speed = speed;
+    this.score = 0;
 
     // Loading the image by setting this.sprite to the appropriate image
     this.sprite = 'images/char-boy.png';
@@ -88,6 +89,9 @@ var Player = function(x, y, speed) {
 Player.prototype.update = function(dt) {
     // TODO: The update method for the Player (can be similar to the one for the Enemy)
     this.sprite = player.sprite;
+    this.score += 1;
+    this.x = 200;
+    this.y = 380;        
 };
 
 Player.prototype.handleInput = function(keyCode) {
@@ -104,37 +108,39 @@ Player.prototype.handleInput = function(keyCode) {
         case 'right':
             player.x += player.speed; // -20?
         break;
-        case 'char-boy':
-            player.sprite = 'images/char-boy.png';
-            player.update();
-        break;
-        case 'char-cat-girl':
-            player.sprite = 'images/char-cat-girl.png';
-            player.update();
-        break;
-        case 'char-horn-girl':
-            player.sprite = 'images/char-horn-girl.png';
-            player.update();
-        break;
-        case 'char-pink-girl':
-            player.sprite = 'images/char-pink-girl.png';
-            player.update();
-        break;
-        case 'char-princess-girl':
-            player.sprite = 'images/char-princess-girl.png';
-            player.update();
-        break;        
+        // case 'char-boy':
+        //     player.sprite = 'images/char-boy.png';
+        //     player.update();
+        // break;
+        // case 'char-cat-girl':
+        //     player.sprite = 'images/char-cat-girl.png';
+        //     player.update();
+        // break;
+        // case 'char-horn-girl':
+        //     player.sprite = 'images/char-horn-girl.png';
+        //     player.update();
+        // break;
+        // case 'char-pink-girl':
+        //     player.sprite = 'images/char-pink-girl.png';
+        //     player.update();
+        // break;
+        // case 'char-princess-girl':
+        //     player.sprite = 'images/char-princess-girl.png';
+        //     player.update();
+        // break;        
     }
     
 };
 
 Player.prototype.resetPlayer = function() {
-    player.x = 202.5;
-    player.y = 383;
+    player.x = 200;
+    player.y = 380;
+    player.score = 0;
 }
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
+    document.getElementById('score').innerHTML = player.score;
     console.log('player = (' + this.x + ',' + this.y + ');');
 };
 
@@ -157,11 +163,11 @@ document.addEventListener('keyup', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
-        49: 'char-boy',
-        50: 'char-cat-girl',
-        51: 'char-horn-girl',
-        52: 'char-pink-girl',
-        53: 'char-princess-girl',
+        // 49: 'char-boy',
+        // 50: 'char-cat-girl',
+        // 51: 'char-horn-girl',
+        // 52: 'char-pink-girl',
+        // 53: 'char-princess-girl',
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
